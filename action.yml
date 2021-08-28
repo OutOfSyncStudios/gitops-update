@@ -1,0 +1,9 @@
+name: GitOps Update
+author: Out of Sync Studios, LLC.
+description: ""
+branding:
+  icon: git-commit
+  color: blue
+runs:
+  using: node12
+  main: dist/index.js

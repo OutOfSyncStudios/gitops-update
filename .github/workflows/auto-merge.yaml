@@ -1,0 +1,16 @@
+name: auto-merge
+
+on:
+  pull_request_target:
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2.3.4
+      - name: Auto-merge
+        uses: ahmadnassri/action-dependabot-auto-merge@v2.4
+        with:
+          github-token: ${{ secrets.GH_ORG_ADMIN_TOKEN }}
+          command: squash and merge

@@ -1,0 +1,46 @@
+name: Check, Build, and Run
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Run code checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2.3.4
+      - name: Setup node
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 12.x
+      - name: Install deps
+        run: npm ci
+      - name: Check formatting
+        run: npm run format-check
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test
+  build:
+    name: Build action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2.3.4
+      - name: Setup node
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 12.x
+      - name: Install deps
+        run: npm ci
+      - name: Build action
+        run: npm run build
+      - name: Check if there are changes
+        id: changes
+        uses: UnicornGlobal/has-changes-action@v1.0.11
+      - name: Exit with error if there are changes
+        if: steps.changes.outputs.changed == 1
+        run: exit 1
