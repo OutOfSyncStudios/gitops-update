@@ -1,6 +1,11 @@
 {
-  "plugins": ["@typescript-eslint", "mocha"],
-  "extends": ["@outofsyncstudios/eslint-config", "plugin:mocha/recommended", "plugin:import/typescript"],
+  "plugins": ["@typescript-eslint", "mocha", "chai-friendly"],
+  "extends": [
+    "@outofsyncstudios/eslint-config",
+    "plugin:mocha/recommended",
+    "plugin:import/typescript",
+    "plugin:chai-friendly/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2019,

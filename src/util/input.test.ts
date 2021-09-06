@@ -1,30 +1,28 @@
+/* eslint-disable mocha/no-setup-in-describe -- Disabling since we're using dynamic tests */
+
 import { InputOptions } from '@actions/core';
 import { expect } from 'chai';
 import proxyquire from 'proxyquire';
-import sinon from 'sinon';
+import { stub, SinonStub } from 'sinon';
 import { getBooleanInput, getIntegerInput } from './input';
 
-var getInputStub: sinon.SinonStub<[string, InputOptions?], string>;
-var stubbedInputModule: {
+let getInputStub: SinonStub<[string, InputOptions?], string>;
+let stubbedInputModule: {
   getBooleanInput: typeof getBooleanInput;
   getIntegerInput: typeof getIntegerInput;
 };
 
 describe('Input utilities', () => {
   beforeEach(() => {
-    getInputStub = sinon.stub();
-    stubbedInputModule = proxyquire('./input', {
-      '@actions/core': {
-        getInput: getInputStub,
-      },
-    });
+    getInputStub = stub();
+    stubbedInputModule = proxyquire('./input', { '@actions/core': { getInput: getInputStub } });
   });
 
   describe('getBooleanInput', () => {
     describe('true inputs', () => {
       const truthy = ['true', 't', 'yes', 'y', 'on', '1'];
 
-      truthy.forEach(input => {
+      truthy.forEach((input) => {
         it(`returns true for ${input}`, () => {
           const key = 'input';
           getInputStub.returns(input);
