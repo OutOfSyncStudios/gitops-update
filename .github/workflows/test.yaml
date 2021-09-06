@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: 12.x
+      - name: Setup auth for private packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_ORG_ADMIN_TOKEN }}" > ~/.npmrc
       - name: Install deps
         run: npm ci
       - name: Check formatting
@@ -34,6 +36,8 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: 12.x
+      - name: Setup auth for private packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_ORG_ADMIN_TOKEN }}" > ~/.npmrc
       - name: Install deps
         run: npm ci
       - name: Build action
