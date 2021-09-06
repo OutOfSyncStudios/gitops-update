@@ -1,0 +1,31 @@
+import { InputOptions, getInput } from '@actions/core';
+import _ from 'lodash';
+
+/**
+ * Gets an input and interprets it as a boolean value. Will treat any value matching true, t, yes, y, on, or 1 (case
+ * insensitive) as true, anything that doesn't match is false.
+ *
+ * @param {string} name - @see getInput.
+ * @param {InputOptions} options - @see getInput.
+ * @returns {boolean} The value converted to a boolean.
+ */
+export function getBooleanInput(name: string, options?: InputOptions): boolean {
+  const value = getInput(name, options).toLowerCase();
+  return _.includes(['true', 't', 'yes', 'y', 'on', '1'], value);
+}
+
+/**
+ * Gets an input and interprets it as an integer
+ *
+ * @param {string} name - @see getInput.
+ * @param {InputOptions} options - @see getInput.
+ * @returns {number} The value interpreted as an integer.
+ */
+export function getIntegerInput(name: string, options?: InputOptions): number {
+  const value = getInput(name, options);
+  const int = parseInt(value, 10);
+  if (_.isNaN(int)) {
+    throw new TypeError(`Could not parse ${value} as an integer`);
+  }
+  return int;
+}
