@@ -1,25 +1,13 @@
 import { InputOptions, getInput } from '@actions/core';
 import _ from 'lodash';
-
-/**
- * Gets an input and interprets it as a boolean value. Will treat any value matching true, t, yes, y, on, or 1 (case
- * insensitive) as true, anything that doesn't match is false.
- *
- * @param {string} name - @see getInput.
- * @param {InputOptions} options - @see getInput.
- * @returns {boolean} The value converted to a boolean.
- */
-export function getBooleanInput(name: string, options?: InputOptions): boolean {
-  const value = getInput(name, options).toLowerCase();
-  return _.includes(['true', 't', 'yes', 'y', 'on', '1'], value);
-}
+import YAML from 'yaml';
 
 /**
  * Gets an input and interprets it as an integer
  *
- * @param {string} name - @see getInput.
- * @param {InputOptions} options - @see getInput.
- * @returns {number} The value interpreted as an integer.
+ * @param name - @see getInput.
+ * @param options - @see getInput.
+ * @returns The value interpreted as an integer.
  */
 export function getIntegerInput(name: string, options?: InputOptions): number {
   const value = getInput(name, options);
@@ -28,4 +16,15 @@ export function getIntegerInput(name: string, options?: InputOptions): number {
     throw new TypeError(`Could not parse ${value} as an integer`);
   }
   return int;
+}
+
+/**
+ * Gets an input and parses it as YAML
+ * @param name - @see getInput.
+ * @param options - @see getInput.
+ * @returns The value parsed as YAML
+ */
+export function getYamlInput(name: string, options?: InputOptions): any {
+  const value = getInput(name, options);
+  return YAML.parse(value);
 }

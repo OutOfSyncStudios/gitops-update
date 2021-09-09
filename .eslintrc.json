@@ -20,6 +20,14 @@
     "id-length": ["error", { "exceptions": ["_"] }],
     "mocha/no-mocha-arrows": ["off"],
     // Disabling since prettier is very picky about when it will put stuff onto a newline
-    "newline-per-chained-call": ["off"]
+    "newline-per-chained-call": ["off"],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ]
   }
 }

@@ -1,14 +1,11 @@
-/* eslint-disable mocha/no-setup-in-describe -- Disabling since we're using dynamic tests */
-
 import { InputOptions } from '@actions/core';
 import { expect } from 'chai';
 import proxyquire from 'proxyquire';
 import { stub, SinonStub } from 'sinon';
-import { getBooleanInput, getIntegerInput } from './input';
+import { getIntegerInput } from './input';
 
 let getInputStub: SinonStub<[string, InputOptions?], string>;
 let stubbedInputModule: {
-  getBooleanInput: typeof getBooleanInput;
   getIntegerInput: typeof getIntegerInput;
 };
 
@@ -16,42 +13,6 @@ describe('Input utilities', () => {
   beforeEach(() => {
     getInputStub = stub();
     stubbedInputModule = proxyquire('./input', { '@actions/core': { getInput: getInputStub } });
-  });
-
-  describe('getBooleanInput', () => {
-    describe('true inputs', () => {
-      const truthy = ['true', 't', 'yes', 'y', 'on', '1'];
-
-      truthy.forEach((input) => {
-        it(`returns true for ${input}`, () => {
-          const key = 'input';
-          getInputStub.returns(input);
-          expect(stubbedInputModule.getBooleanInput(key)).to.be.true;
-          getInputStub.calledOnceWith(key);
-        });
-      });
-    });
-
-    it('is case insenitive', () => {
-      const key = 'input';
-      getInputStub.returns('Yes');
-      expect(stubbedInputModule.getBooleanInput(key)).to.be.true;
-      getInputStub.calledOnceWith(key);
-    });
-
-    it('returns false for non-matching inputs', () => {
-      const key = 'input';
-      getInputStub.returns('false');
-      expect(stubbedInputModule.getBooleanInput(key)).to.be.false;
-      getInputStub.calledOnceWith(key);
-    });
-
-    it('returns false for empty inputs', () => {
-      const key = 'input';
-      getInputStub.returns('');
-      expect(stubbedInputModule.getBooleanInput(key)).to.be.false;
-      getInputStub.calledOnceWith(key);
-    });
   });
 
   describe('getIntegerInput', () => {
@@ -65,7 +26,7 @@ describe('Input utilities', () => {
     it('throws on non-integer input', () => {
       const key = 'input';
       getInputStub.returns('foobar');
-      expect(() => stubbedInputModule.getIntegerInput(key)).to.throw;
+      expect(() => stubbedInputModule.getIntegerInput(key)).to.throw(TypeError);
       getInputStub.calledOnceWith(key);
     });
   });

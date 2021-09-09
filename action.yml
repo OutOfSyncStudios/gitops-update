@@ -1,9 +1,38 @@
 name: GitOps Update
 author: Out of Sync Studios, LLC.
-description: ""
+description: ''
 branding:
   icon: git-commit
   color: blue
 runs:
   using: node12
   main: dist/index.js
+inputs:
+  token:
+    description: Personal access token (PAT) used to perform actions against the repository
+    required: false
+    default: ${{ github.token }}
+  repo:
+    description: The repository to update in the form <owner>/<repo>
+    required: false
+    default: ${{ github.repository }}
+  branch:
+    description: Branch to commit the changes to. If not set, the target will be the default branch for the repo
+    required: false
+  updates:
+    description: A YAML document describing the updates to perform
+    required: true
+  message:
+    description: Message for the resulting commit
+    required: true
+  append-run-info:
+    description: Appends information about the run to the commit message
+    required: false
+    default: 'true'
+  retries:
+    description: Number of times to retry the commit (which may fail due to non-fastfoward upates)
+    required: false
+    default: '10'
+outputs:
+  sha:
+    description: SHA of the commit. Will be an empty string if there was nothing to commit.
