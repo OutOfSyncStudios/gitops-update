@@ -11,7 +11,8 @@ import { Endpoints } from '@octokit/types';
 type Octokit = ReturnType<typeof github.getOctokit>;
 type Tree = Endpoints['POST /repos/{owner}/{repo}/git/trees']['parameters']['tree'];
 
-type Updates = Map<string, Map<string, any>>;
+type Change = [string, any];
+type Update = [string, Change[]];
 
 function isFileMode(str: string): str is '100644' | '100755' {
   return str === '100644' || str === '100755';
@@ -28,7 +29,7 @@ async function commitUpdates(
   repo: string,
   branch: string,
   message: string,
-  updates: Updates
+  updates: Update[]
 ): Promise<string> {
   const ref = `heads/${branch}`;
   let baseRef;
@@ -156,7 +157,8 @@ async function run(): Promise<void> {
     message += `\nCommit made by Github Actions ${url}`;
   }
 
-  const updates: Updates = getYamlInput('updates', { required: true });
+  const rawUpdates = getYamlInput('updates', { required: true });
+  const updates = <Update[]>(<unknown>_.entries(_.mapValues(rawUpdates, _.entries)));
   const retries = getIntegerInput('retries');
 
   let sha: string;
@@ -164,8 +166,11 @@ async function run(): Promise<void> {
     sha = await retry(async () => await commitUpdates(octokit, owner, repo, branch, message, updates), {
       retries,
       onRetry: (err) => {
-        core.warning(`Error while performing commit: ${err}`);
+        core.warning(`Error while performing commit: ${err}\n${err.stack}`);
       },
+      minTimeout: 100,
+      maxTimeout: 5_000,
+      randomize: false,
     });
   } catch (err) {
     throw new Error(`Could not perform commit after ${retries + 1} attempts: ${err}`);
