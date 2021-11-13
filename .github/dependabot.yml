@@ -4,7 +4,14 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
+    registries:
+      - npm-github
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+registries:
+  npm-github:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{secrets.DEPENDABOT_REGISTRY_PAT}}
