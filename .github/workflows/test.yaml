@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2.4.0
       - name: Setup node
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v3.3.0
         with:
           node-version: 12.x
       - name: Setup auth for private packages
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2.4.0
       - name: Setup node
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v3.3.0
         with:
           node-version: 12.x
       - name: Setup auth for private packages
